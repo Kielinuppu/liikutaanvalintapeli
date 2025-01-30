@@ -41,19 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         8: 'Valinta_tanssii_tytto'
     };
 
-    // Vastinparit väärille väitteille
-    const wrongPairs = {
-        0: 1,  // "POIKA HIIPII" -> näytetään "TYTTÖ HYPPII" kuva
-        1: 0,  // "TYTTÖ HYPPII" -> näytetään "POIKA HIIPII" kuva
-        2: 3,  // "POIKA KÄVELEE" -> näytetään "TYTTÖ KONTTAA" kuva
-        3: 2,  // "TYTTÖ KONTTAA" -> näytetään "POIKA KÄVELEE" kuva
-        4: 5,  // "TYTTÖ KURKOTTAA" -> näytetään "POIKA LOIKKII" kuva
-        5: 4,  // "POIKA LOIKKII" -> näytetään "TYTTÖ KURKOTTAA" kuva
-        6: 7,  // "POIKA RYÖMII" -> näytetään "POIKA TANSSII" kuva
-        7: 6,  // "POIKA TANSSII" -> näytetään "POIKA RYÖMII" kuva
-        8: 7   // "TYTTÖ TANSSII" -> näytetään "POIKA TANSSII" kuva
-    };
-
     let currentRound = 0;
     let score = 0;
     let gameQuestions = [];
@@ -62,27 +49,25 @@ document.addEventListener('DOMContentLoaded', () => {
         let questions = [];
         let usedStatements = new Set();
         
-        // Valitaan 3 väärää väitettä
-        while (questions.length < 3) {
+        // Valitaan 2 oikeaa väitettä (näytetään _o kuva)
+        while (questions.length < 2) {
             let statementIndex = Math.floor(Math.random() * statements.length);
             if (!usedStatements.has(statementIndex)) {
                 questions.push({
                     statementIndex: statementIndex,
-                    imageIndex: wrongPairs[statementIndex],
-                    isCorrect: false
+                    isCorrect: true
                 });
                 usedStatements.add(statementIndex);
             }
         }
 
-        // Valitaan 2 oikeaa väitettä
+        // Valitaan 3 väärää väitettä (näytetään _v kuva)
         while (questions.length < 5) {
             let statementIndex = Math.floor(Math.random() * statements.length);
             if (!usedStatements.has(statementIndex)) {
                 questions.push({
                     statementIndex: statementIndex,
-                    imageIndex: statementIndex,
-                    isCorrect: true
+                    isCorrect: false
                 });
                 usedStatements.add(statementIndex);
             }
@@ -93,9 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadQuestionContent(question) {
-        const { statementIndex, imageIndex, isCorrect } = question;
+        const { statementIndex, isCorrect } = question;
         const imageSuffix = isCorrect ? '_o' : '_v';
-        hyonteisImage.src = `${imageMap[imageIndex]}${imageSuffix}.png`;
+        hyonteisImage.src = `${imageMap[statementIndex]}${imageSuffix}.png`;
         hyonteisImage.style.display = 'block';
         this.question.textContent = statements[statementIndex];
         nextArrow.classList.add('hidden');
